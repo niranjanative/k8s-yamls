@@ -1,0 +1,24 @@
+1. kubectl create sa [name]
+
+2. a secret will be created along with it which has the token(password) which can be used to login to the cluster by any user
+
+3. Use below command to get the token, just replace [SA-NAME] with service account you created
+TOKEN=$(kubectl describe secrets "$(kubectl describe serviceaccount [SA-NAME] | grep -i Tokens | awk '{print $2}')" | grep token: | awk '{print $2}')
+
+4. Now check your current context and remember its name as we will move back to it after testing
+kubectl config current-context
+
+5. Now set credentials for newly created user
+kubectl config set-credentials my-user --token=$TOKEN
+
+6. check the cluster name using below command
+kubectl config view
+
+7. now create context for new user created by running below command. Replace [CLUSTERNAME] & [USERNAME] appropriately
+kubectl config set-context user-account-name --cluster=[CLUSTERNAME] --user=[USERNAME]
+
+8. Switch to newly created context using below command. Replace [CONTEXTNAME] appropriatly
+kubectl config use-context [CONTEXTNAME]
+
+9. Switch back to old context to get full access to cluster after testing. Use [CONTEXTNAME] name you got in step 4
+kubectl config use-context [CONTEXTNAME]
