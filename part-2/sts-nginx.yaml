@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: nginx-sts
+spec:
+  serviceName: "nginx-svc-headless"
+  replicas: 2
+  #podManagementPolicy: Parallel
+  selector:
+    matchLabels:
+      run: nginx-sts
+  template:
+    metadata:
+      labels:
+        run: nginx-sts
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
